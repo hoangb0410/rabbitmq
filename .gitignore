@@ -1,0 +1,39 @@
+# Node modules
+node_modules/
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# dotenv environment files
+**/.env
+.env
+.env.local
+.env.*.local
+
+# OS-specific
+.DS_Store
+Thumbs.db
+
+# IDEs
+.vscode/
+.idea/
+
+# Docker-related
+docker-compose.override.yml
+*.local.yml
+
+# Build output (nếu có build step)
+dist/
+build/
+coverage/
+
+# PM2
+.pids
+*.pid
+
+# Debugger
+*.tgz

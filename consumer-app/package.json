@@ -1,0 +1,14 @@
+{
+    "name": "consumer-app",
+    "version": "1.0.0",
+    "description": "Worker to consume messages from RabbitMQ and save to MySQL",
+    "main": "worker.js",
+    "scripts": {
+        "start": "node worker.js"
+    },
+    "dependencies": {
+        "amqplib": "^0.10.3",
+        "mysql2": "^3.6.5",
+        "dotenv": "^16.3.1"
+    }
+}

@@ -1,0 +1,59 @@
+services:
+  rabbitmq:
+    image: rabbitmq:3-management # Sử dụng image có giao diện quản lý
+    container_name: rabbitmq
+    ports:
+      - "5672:5672"  # Cổng giao tiếp AMQP
+      - "15672:15672" # Cổng giao diện quản lý RabbitMQ
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq/
+    environment:
+      - RABBITMQ_DEFAULT_USER=user
+      - RABBITMQ_DEFAULT_PASS=password
+
+  mysql:
+    image: mysql:8.0
+    container_name: mysql_db
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: my_database
+      MYSQL_USER: dbuser
+      MYSQL_PASSWORD: dbpassword
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+  producer_app:
+    build: ./producer-app
+    container_name: producer_service
+    ports:
+      - "3000:3000"
+    depends_on:
+      - rabbitmq
+    environment:
+      RABBITMQ_URL: amqp://user:password@rabbitmq:5672
+      PORT: 3000
+    volumes:
+      - ./producer-app:/usr/src/app
+      - /usr/src/app/node_modules # Để tránh ghi đè node_modules khi mount volume
+
+  consumer_app:
+    build: ./consumer-app
+    container_name: consumer_service
+    depends_on:
+      - rabbitmq
+      - mysql
+    environment:
+      RABBITMQ_URL: amqp://user:password@rabbitmq:5672
+      MYSQL_HOST: mysql_db
+      MYSQL_USER: dbuser
+      MYSQL_PASSWORD: dbpassword
+      MYSQL_DATABASE: my_database
+    volumes:
+      - ./consumer-app:/usr/src/app
+      - /usr/src/app/node_modules
+
+volumes:
+  rabbitmq_data:
+  mysql_data:
